@@ -25,7 +25,7 @@ class _VLCQualitySettingButtonState extends State<VLCQualitySettingButton> {
     String label,
   ) {
     final String thisOption = widget.videoQualities
-        .singleWhere((e) => e.endsWith(filenameEndsWith), orElse: () => null);
+        .firstWhere((e) => e.contains(filenameEndsWith), orElse: () => null);
     return thisOption != null
         ? Column(
             children: [
@@ -39,7 +39,7 @@ class _VLCQualitySettingButtonState extends State<VLCQualitySettingButton> {
                 onTap: () {
                   Navigator.pop(context);
                   if (!widget.videoPlayerController.dataSource
-                      .endsWith(filenameEndsWith))
+                      .contains(filenameEndsWith))
                     widget.changeVideoQuality(thisOption);
                 },
               ),
@@ -72,9 +72,9 @@ class _VLCQualitySettingButtonState extends State<VLCQualitySettingButton> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _qualitySettingSelection('HD.mp4', '4k'),
-                    _qualitySettingSelection('SD.mp4', '1080p'),
-                    _qualitySettingSelection('Low.mp4', 'SD'),
+                    _qualitySettingSelection('HD.', '4k'),
+                    _qualitySettingSelection('SD.', '1080p'),
+                    _qualitySettingSelection('Low.', 'SD'),
                   ],
                 ),
               ),

@@ -23,10 +23,12 @@ class _VideoPlayerOptionState extends State<VideoPlayerOption> {
   @override
   void initState() {
     super.initState();
-    final bool nativePlayer = Prefs.instance.getBool('nativePlayer');
-    _selected = nativePlayer ?? widget.label == 'VLC';
-    if (nativePlayer != null && widget.label == 'nativePlayer')
-      _selected = !_selected;
+    final bool nativePlayer = Prefs.instance.getBool('nativePlayer') ?? false;
+    if (widget.label == 'VLC' && !nativePlayer ||
+        widget.label == 'Native' && nativePlayer)
+      _selected = true;
+    else
+      _selected = false;
   }
 
   @override

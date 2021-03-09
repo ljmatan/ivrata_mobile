@@ -99,12 +99,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 showDialog(
                     context: context,
                     barrierDismissible: false,
+                    barrierColor: Theme.of(context).primaryColor,
                     builder: (context) =>
                         Center(child: CircularProgressIndicator()));
-                await DB.instance.rawDelete('DELETE * FROM Saved');
+                await DB.instance.delete('Saved');
                 for (var key in Prefs.instance.getKeys())
                   await Prefs.instance.remove(key);
                 User.setInstance(null);
+                Navigator.pop(context);
                 widget.logoutSuccesful(1);
               },
             ),

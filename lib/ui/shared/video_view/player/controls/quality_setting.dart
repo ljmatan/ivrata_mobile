@@ -4,11 +4,12 @@ import 'package:video_player/video_player.dart';
 class QualitySettingButton extends StatefulWidget {
   final VideoPlayerController videoPlayerController;
   final Set<String> videoQualities;
-  final Function setVisibilityTimer;
+  final Function changeVideoQuality, setVisibilityTimer;
 
   QualitySettingButton({
     @required this.videoPlayerController,
     @required this.videoQualities,
+    @required this.changeVideoQuality,
     @required this.setVisibilityTimer,
   });
 
@@ -19,6 +20,35 @@ class QualitySettingButton extends StatefulWidget {
 }
 
 class _QualitySettingButtonState extends State<QualitySettingButton> {
+  Widget _qualitySettingSelection(
+    String filenameEndsWith,
+    String label,
+  ) {
+    final String thisOption = widget.videoQualities
+        .firstWhere((e) => e.contains(filenameEndsWith), orElse: () => null);
+    return thisOption != null
+        ? Column(
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 64,
+                  child: Center(child: Text(label + ' quality')),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  if (!widget.videoPlayerController.dataSource
+                      .contains(filenameEndsWith))
+                    widget.changeVideoQuality(thisOption);
+                },
+              ),
+              const Divider(height: 0),
+            ],
+          )
+        : const SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -36,10 +66,16 @@ class _QualitySettingButtonState extends State<QualitySettingButton> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Material(
-                color: Colors.transparent,
+                elevation: 16,
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [],
+                  children: [
+                    _qualitySettingSelection('HD.', '4k'),
+                    _qualitySettingSelection('SD.', '1080p'),
+                    _qualitySettingSelection('Low.', 'SD'),
+                  ],
                 ),
               ),
             ),

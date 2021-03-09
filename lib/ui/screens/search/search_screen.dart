@@ -26,16 +26,35 @@ class _SearchScreenState extends State<SearchScreen> {
 
   StreamSubscription _seriesFilterSubscription;
 
+  Key _futureKey = UniqueKey();
+  static Future<VideosResponse> _getVideos;
+  void _updateSearchParams() {
+    _futureKey = UniqueKey();
+    _getVideos = VideosAPI.searchVideos(
+      _searchTextController.text,
+      _currentPage,
+      _seriesFilter,
+    );
+  }
+
+  String _lastSearch;
+
   @override
   void initState() {
     super.initState();
     FilterController.init();
+    _updateSearchParams();
     _searchTextController.addListener(() {
       _searchController.add(_searchTextController.text);
+      if (_lastSearch != _searchTextController.text) {
+        setState(() => _updateSearchParams());
+        _lastSearch = _searchTextController.text;
+      }
     });
     _seriesFilterSubscription = FilterController.stream.listen((value) {
       _seriesFilter = value;
       _searchController.add(_searchTextController.text);
+      setState(() => _updateSearchParams());
     });
   }
 
@@ -85,11 +104,8 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (context, searchTerm) => searchTerm.hasData &&
                 searchTerm.data.length > 2
             ? FutureBuilder(
-                future: VideosAPI.searchVideos(
-                  searchTerm.data,
-                  _currentPage,
-                  _seriesFilter,
-                ),
+                key: _futureKey,
+                future: _getVideos,
                 builder: (context, AsyncSnapshot<VideosResponse> videos) =>
                     videos.connectionState != ConnectionState.done ||
                             videos.hasError ||

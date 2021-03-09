@@ -119,6 +119,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                                       widget.videoPlayerController,
                                   videoQualities: widget.videoQualities,
                                   setVisibilityTimer: _setVisbilityTimer,
+                                  changeVideoQuality: widget.changeVideoQuality,
                                 ),
                                 ControlsDivider(),
                                 FullscreenButton(

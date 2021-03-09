@@ -38,7 +38,7 @@ class _VLCPlayerScreenState extends State<VLCPlayerScreen> {
           if (!_controlsVisible &&
               controller.value.position.inMilliseconds > 0) {
             _controlsVisible = true;
-            _controlsController.add(true);
+            if (mounted) _controlsController.add(true);
             _setVisbilityTimer();
           }
           _positionController.add(controller.value.position.inSeconds);

@@ -28,7 +28,7 @@ abstract class VideosAPI {
                   (series == null ? '' : '&is_serie=$series')))
           .body);
 
-  static Future<Map> getLivestreams() async => jsonDecode((await http.get(
+  static Future getLivestreams() async => jsonDecode((await http.get(
           'https://video.ivrata.com/plugin/API/get.json.php?APIName=livestreams'))
       .body);
 
